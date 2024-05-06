@@ -1,13 +1,9 @@
 from selenium.webdriver.common.by import By
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
-from openpyxl import Workbook
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 import time
-import datetime
 import requests
 from selenium.webdriver.support import expected_conditions as EC
 
