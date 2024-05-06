@@ -1,5 +1,4 @@
 foilum
-geopy
 beautifulsoup4
 requests
 pillow
