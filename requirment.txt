@@ -1,0 +1,9 @@
+foilum
+geopy
+beautifulsoup4
+requests
+pillow
+selenium
+pytesseract
+opencv-python
+pandas
