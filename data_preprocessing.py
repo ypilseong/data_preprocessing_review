@@ -5,31 +5,34 @@ data_frame = data[['사업장명', '인허가일자', '상세영업상태명', '
 data_frame.columns = ['store_name', 'permission_date', 'situation', 'address', 'address_road']
 data_frame = data_frame.loc[data_frame.situation=='영업']
 
-area = '구좌'
-new_df = pd.DataFrame(columns=data_frame.columns)
-cnt = 0
+# 날짜 데이터 표준화 및 특정기간 추출
+data_frame['permission_date'] = pd.to_datetime(data_frame['permission_date'], format='%Y%m%d')
+start_date = pd.to_datetime('2020-01-01')
+end_date = pd.to_datetime('2021-12-31')
+new_df_filter = data_frame[data_frame['permission_date'].between(start_date, end_date)]
 
-# 특정 지역 추출
-for i in range(len(data_frame)):
-    ad = data_frame.loc[data_frame.index[i], ['address_road']]
-    if str(ad['address_road']).find(area) != -1:
-        new_df.loc[cnt] = data_frame.iloc[i]
-        cnt += 1
-    else:
-        continue
 
-new_df['new_store_name'] = ''
+new_df_filter['new_store_name'] = ''
+
+def get_addrs(x):
+    try:
+        x1 = x.replace('제주특별자치도', '')
+        x1 = x1.split(',')
+        return x1[0]
+    except:
+        pass
+
+
+new_df_filter['new_store_name'] = new_df_filter['address_road'].apply(get_addrs)
+
 # 주소와 상호명 결합
-for i in range(len(new_df)):
-    cols = ['store_name', 'address_road']
-    new_df['new_store_name'] = new_df[cols].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+
+cols = ['store_name', 'new_store_name']
+new_df_filter['new_store_name'] = new_df_filter[cols].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
 
 # 날짜 데이터 표준화 및 특정기간 추출
-new_df['permission_date'] = pd.to_datetime(new_df['permission_date'], format='%Y%m%d')
-start_date = pd.to_datetime('2021-01-01')
-end_date = pd.to_datetime('2023-12-30')
-new_df_filter = new_df[new_df['permission_date'].between(start_date, end_date)]
+
 
 new_df_filter.to_csv('data/filtered_data.csv', index=False)
 
-print(new_df_filter)
+print(len(new_df_filter))
