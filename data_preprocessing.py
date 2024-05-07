@@ -25,8 +25,6 @@ def get_addrs(x):
 
 new_df_filter['new_store_name'] = new_df_filter['address_road'].apply(get_addrs)
 
-
-
 # 주소와 상호명 결합
 
 cols = ['store_name', 'new_store_name']
@@ -38,17 +36,3 @@ new_df_filter['new_store_name'] = new_df_filter[cols].apply(lambda row: ' '.join
 new_df_filter.to_csv('data/filtered_data.csv', index=False)
 
 print(len(new_df_filter))
-
-
-
-# new_df = pd.DataFrame(columns=data_frame.columns)
-# cnt = 0
-
-# # 특정 지역 추출
-# for i in range(len(data_frame)):
-#     ad = data_frame.loc[data_frame.index[i], ['address_road']]
-#     if str(ad['address_road']).find(area) != -1:
-#         new_df.loc[cnt] = data_frame.iloc[i]
-#         cnt += 1
-#     else:
-#         continue
