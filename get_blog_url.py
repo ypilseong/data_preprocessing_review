@@ -8,13 +8,13 @@ import requests
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def get_blog_url(store_date):
+def get_blog_url(store_data):
 
 
     # url
     #url = 'https://map.naver.com/p/entry/place/1821574691?c=15.46,0,0,0,dh&placePath=/review'
     #url = 'https://map.naver.com/v5/search/제주 제주시 구좌읍 평대5길 41 이로리'
-    url = f'https://map.naver.com/v5/search/{store_date}'
+    url = f'https://map.naver.com/v5/search/{store_data}'
     
     # Webdriver headless mode setting
     options = webdriver.ChromeOptions()
@@ -58,9 +58,11 @@ def get_blog_url(store_date):
             blog_url_list.append(href_value)
             # div_element = a_element.find_element(By.CLASS_NAME, 'KT8X8')
             # div2_element = div_element.find_element(By.CLASS_NAME, 'FYQ74')
-            # span_value = div2_element.find_element(By.TAG_NAME, 'ZeWU8').text
+            # span_value = div2_element.find_element(By.CLASS_NAME, 'ZeWU8').text
             print(href_value)
             # print(span_value)
+        driver.quit()
+
         return blog_url_list
 
     except Exception as e:
@@ -68,7 +70,7 @@ def get_blog_url(store_date):
     # Save the file(temp)    file_name = 'naver_review_' + now.strftime('%Y-%m-%d_%H-%M-%S') + '.xlsx    xlsx.save(file_name)
     
 
-if __name__=='main':
-    get_blog_url()
+if __name__=='__main__':
+    get_blog_url('제주시 구좌읍 평대5길 41 이로리')
 
     

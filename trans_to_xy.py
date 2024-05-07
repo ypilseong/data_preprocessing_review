@@ -5,9 +5,14 @@ import requests
 df = pd.read_csv('data/filtered_data.csv', sep=',', encoding='utf-8')
 
 def get_addrs(x):
-    x1 = x.split(' ')
-    return " ".join(x1[3:5])
-    
+    try:
+        x1 = x.replace('제주특별자치도', '')
+        x1 = x1.split(',')
+        return x1[0]
+    except:
+        pass
+
+
 # 주소 전처리
 df['trans_ad'] = df['address'].apply(get_addrs)
 df['trans_ad_road'] = df['address_road'].apply(get_addrs)
