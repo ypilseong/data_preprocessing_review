@@ -1,19 +1,46 @@
-# data_preprocessing_review
+# data-preprosessing-review
 
-이 프로젝트는 리뷰 거짓 판별 연구를 위한 데이터 전처리 프로젝트 입니다.
+[![pypi-image]][pypi-url]
+[![version-image]][release-url]
+[![release-date-image]][release-url]
+[![license-image]][license-url]
+[![codecov][codecov-image]][codecov-url]
+[![jupyter-book-image]][docs-url]
 
-## project 환경
+<!-- Links: -->
+[codecov-image]: https://codecov.io/gh/ypilseong/data_preprosessing_review/branch/main/graph/badge.svg?token=[REPLACE_ME]
+[codecov-url]: https://codecov.io/gh/ypilseong/data_preprosessing_review
+[pypi-image]: https://img.shields.io/pypi/v/data-preprosessing-review
+[license-image]: https://img.shields.io/github/license/ypilseong/data_preprosessing_review
+[license-url]: https://github.com/ypilseong/data_preprosessing_review/blob/main/LICENSE
+[version-image]: https://img.shields.io/github/v/release/ypilseong/data_preprosessing_review?sort=semver
+[release-date-image]: https://img.shields.io/github/release-date/ypilseong/data_preprosessing_review
+[release-url]: https://github.com/ypilseong/data_preprosessing_review/releases
+[jupyter-book-image]: https://jupyterbook.org/en/stable/_images/badge.svg
 
-- wsl ubuntu20.04
-- chrome webdriver 124
+[repo-url]: https://github.com/ypilseong/data_preprosessing_review
+[pypi-url]: https://pypi.org/project/data-preprosessing-review
+[docs-url]: https://ypilseong.github.io/data_preprocessing_review
+[changelog]: https://github.com/ypilseong/data_preprosessing_review/blob/main/CHANGELOG.md
+[contributing guidelines]: https://github.com/ypilseong/data_preprosessing_review/blob/main/CONTRIBUTING.md
+<!-- Links: -->
+
+data prerprosessing for review
+
+- Documentation: [https://ypilseong.github.io/data_preprocessing_review][docs-url]
+- GitHub: [https://github.com/ypilseong/data_preprosessing_review][repo-url]
+- PyPI: [https://pypi.org/project/data-preprosessing-review][pypi-url]
 
 
-[chrome webdriver install link](https://github.com/GoogleChromeLabs/chrome-for-testing/blob/main/data/latest-versions-per-milestone-with-downloads.json)
 
-## data
-- [제주특별자치도 음식점 데이터](https://www.jejudatahub.net/data/view/data/780)
-- [제주특별자치도 렌트가 체류 데이터(2020~2021)](https://www.jejudatahub.net/data/view/data/1213)
-- **OCR tessdata**
-```shell
-git clone https://github.com/tesseract-ocr/tessdata.git
-```
+## Changelog
+
+See the [CHANGELOG] for more information.
+
+## Contributing
+
+Contributions are welcome! Please see the [contributing guidelines] for more information.
+
+## License
+
+This project is released under the [MIT License][license-url].

@@ -2,7 +2,7 @@ import pandas as pd
 from geopy.geocoders import Nominatim
 import requests
 
-df = pd.read_csv('data/filtered_data.csv', sep=',', encoding='utf-8')
+
 
 def get_addrs(x):
     try:
@@ -13,9 +13,6 @@ def get_addrs(x):
         pass
 
 
-# 주소 전처리
-df['trans_ad'] = df['address'].apply(get_addrs)
-df['trans_ad_road'] = df['address_road'].apply(get_addrs)
 
 # 국토교통부 geocoder open api 
 def geocoing(store_ad, type):
@@ -43,26 +40,39 @@ def geocoing(store_ad, type):
         y_value = 0
         return x_value, y_value
 
-df['x'] = ''
-df['y'] = ''
+if __name__=='__main__':
 
-for i in range(len(df)):
-    address = df.loc[i]['trans_ad_road']
-    x_value, y_value = geocoing(address, type="road")
-    df['x'][i] = x_value
-    df['y'][i] = y_value
+    df = pd.read_csv('data/store_data.csv', sep=',', encoding='utf-8')
+    df = df[['사업장명', '인허가일자', '상세영업상태명', '소재지전체주소', '도로명전체주소']]
+    df.columns = ['store_name', 'permission_date', 'situation', 'address', 'address_road']
+    df = df.loc[df.situation=='영업']
+
+    
+
+    df['trans_ad'] = df['address'].apply(get_addrs)
+    df['trans_ad_road'] = df['address_road'].apply(get_addrs)
+
+    df['x'] = ''
+    df['y'] = ''
+
+    # 일일 횟수 제한 4만건 -> 0508 3만건 진행
+    for i in range(30000):
+        address = df.loc[i]['trans_ad_road']
+        x_value, y_value = geocoing(address, type="road")
+        df['x'][i] = x_value
+        df['y'][i] = y_value
 
 
 
 
-nulls = df[df['y'] == 0]
-null_index = list(nulls.index)
+    # nulls = df[df['y'] == 0]
+    # null_index = list(nulls.index)
 
-for i in null_index:
-    address = df.loc[i]['trans_ad']
-    x_value, y_value = geocoing(address, type="parsel")
-    df['x'][i] = x_value
-    df['y'][i] = y_value
+    # for i in null_index:
+    #     address = df.loc[i]['trans_ad']
+    #     x_value, y_value = geocoing(address, type="parsel")
+    #     df['x'][i] = x_value
+    #     df['y'][i] = y_value
 
 
-df.to_csv('data/geopy_address.csv', encoding='utf-8')
+    df.to_csv('data/geopy_address3.csv', encoding='utf-8')
