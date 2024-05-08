@@ -1,6 +1,6 @@
-from get_blog_url import get_blog_url
-from blog_scraping import extract_naverBlog
-from ocr import ocr
+from data_preprocessing_review.crawling.get_blog_url import get_blog_url
+from data_preprocessing_review.crawling.blog_scraping import extract_naverBlog
+from data_preprocessing_review.crawling.ocr import ocr
 from argparse import ArgumentParser
 
 import pandas as pd
