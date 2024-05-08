@@ -43,36 +43,46 @@ def geocoing(store_ad, type):
 if __name__=='__main__':
 
     df = pd.read_csv('data/store_data.csv', sep=',', encoding='utf-8')
-    df = df[['사업장명', '인허가일자', '상세영업상태명', '소재지전체주소', '도로명전체주소']]
-    df.columns = ['store_name', 'permission_date', 'situation', 'address', 'address_road']
+    df = df[['사업장명', '업종구분소분류','인허가일자', '상세영업상태명', '소재지전체주소', '도로명전체주소']]
+    df.columns = ['store_name', 'business_category', 'permission_date', 'situation', 'address', 'address_road']
     df = df.loc[df.situation=='영업']
-
-    
+    df = df[df['business_category'] != '편의점']
+    df.reset_index(drop=True, inplace=True)
 
     df['trans_ad'] = df['address'].apply(get_addrs)
     df['trans_ad_road'] = df['address_road'].apply(get_addrs)
 
     df['x'] = ''
     df['y'] = ''
-
+    
     # 일일 횟수 제한 4만건 -> 0508 3만건 진행
-    for i in range(30000):
+    success_count = 0
+    for i in range(len(df)):
         address = df.loc[i]['trans_ad_road']
-        x_value, y_value = geocoing(address, type="road")
-        df['x'][i] = x_value
-        df['y'][i] = y_value
+        try:
+            x_value, y_value = geocoing(address, type="road")
+            if x_value is not None and y_value is not None:
+                df.at[i, 'x'] = x_value
+                df.at[i, 'y'] = y_value
+            else:
+                print(f"Failed to geocode address: {address}, skipping to the next one.")
+                continue  # 데이터를 찾을 수 없으면 다음 번호로 넘어감
+        except Exception as e:
+            print(f"An error occurred at index {i}: {e}")
+            break  # 오류가 발생하면 루프 중단
+    
+    print(f"Successfully processed {success_count} addresses.")
+    
+    
 
+    nulls = df[df['y'] == 0]
+    null_index = list(nulls.index)
 
-
-
-    # nulls = df[df['y'] == 0]
-    # null_index = list(nulls.index)
-
-    # for i in null_index:
-    #     address = df.loc[i]['trans_ad']
-    #     x_value, y_value = geocoing(address, type="parsel")
-    #     df['x'][i] = x_value
-    #     df['y'][i] = y_value
+    for i in null_index:
+        address = df.loc[i]['trans_ad']
+        x_value, y_value = geocoing(address, type="parsel")
+        df.at[i, 'x'] = x_value
+        df.at[i, 'y'] = y_value
 
 
     df.to_csv('data/geopy_address3.csv', encoding='utf-8')

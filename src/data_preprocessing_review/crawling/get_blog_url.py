@@ -10,10 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def get_blog_url(store_data):
 
-
-    # url
-    #url = 'https://map.naver.com/p/entry/place/1821574691?c=15.46,0,0,0,dh&placePath=/review'
-    #url = 'https://map.naver.com/v5/search/제주 제주시 구좌읍 평대5길 41 이로리'
     url = f'https://map.naver.com/v5/search/{store_data}'
     
     # Webdriver headless mode setting
@@ -55,11 +51,10 @@ def get_blog_url(store_data):
         for li in li_elements:
             a_element = li.find_element(By.TAG_NAME, 'a')
             href_value = a_element.get_attribute('href')
-            blog_url_list.append(href_value)
-            # div_element = a_element.find_element(By.CLASS_NAME, 'KT8X8')
-            # div2_element = div_element.find_element(By.CLASS_NAME, 'FYQ74')
-            # span_value = div2_element.find_element(By.CLASS_NAME, 'ZeWU8').text
-            print(href_value)
+            date_element = li.find_element(By.CSS_SELECTOR, 'div.FYQ74 > span.ZeWU8')  # Adjusted selector
+            date_value = date_element.text
+            blog_url_list.append((href_value, date_value))
+            print(href_value, date_value)
             # print(span_value)
         driver.quit()
 
