@@ -50,7 +50,7 @@ for i in range(len(df_store_new)):
 
 # 인덱스에 기록된 행 삭제
 df_store_new.drop(remove_indices, inplace=True)
-df_store_new.reset_index(inplace=True)
+df_store_new.reset_index(drop=True, inplace=True)
 
 print(len(df_store_new))
 df_store_new.to_csv('data/unique_store_data.csv', encoding='utf-8', index=False)
