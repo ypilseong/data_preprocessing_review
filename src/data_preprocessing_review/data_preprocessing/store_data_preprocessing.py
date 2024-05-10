@@ -1,10 +1,11 @@
 import pandas as pd
 
 data = pd.read_csv('data/store_data.csv', sep=',', encoding='utf-8')
-data_frame = data[['사업장명', '인허가일자', '상세영업상태명', '소재지전체주소', '도로명전체주소']]
-data_frame.columns = ['store_name', 'permission_date', 'situation', 'address', 'address_road']
+data_frame = data[['사업장명', '업종구분소분류','인허가일자', '상세영업상태명', '소재지전체주소', '도로명전체주소']]
+data_frame.columns = ['store_name', 'business_category', 'permission_date', 'situation', 'address', 'address_road']
 data_frame = data_frame.loc[data_frame.situation=='영업']
-
+data_frame = data_frame[data_frame['business_category'] != '편의점']
+data_frame.reset_index(drop=True, inplace=True)
 
 # 날짜 데이터 표준화 및 특정기간 추출
 data_frame['permission_date'] = pd.to_datetime(data_frame['permission_date'], format='%Y%m%d')
