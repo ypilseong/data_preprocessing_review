@@ -47,5 +47,7 @@ pytest-coverage.*
 *.vcf
 *.xml
 
+### folder ###
 data/
 tessdata/
+naverBlog/
