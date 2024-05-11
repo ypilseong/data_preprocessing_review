@@ -6,7 +6,12 @@ from selenium.webdriver.common.keys import Keys
 import time
 import requests
 from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
 
+def trans_date(x):
+    date = x.split('.')
+    date = '20'+date[0]+ '-' + date[1] + '-' + date[2]
+    return date
 
 def get_blog_url(store_data):
 
@@ -35,7 +40,15 @@ def get_blog_url(store_data):
         driver.switch_to.frame("entryIframe")
         # Pagedown
         driver.find_element(By.CSS_SELECTOR, 'body').send_keys(Keys.PAGE_DOWN)
-        driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div/div/div[4]/div/div/div/div/a[4]').click()
+        # driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div/div/div[4]/div/div/div/div/a[4]').click()
+        tab_link = driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div/div/div[4]/div/div/div/div')
+        tag_a = tab_link.find_elements(By.TAG_NAME, 'a')
+        for i in range(len(tag_a)):
+            if tag_a[i].text == '리뷰':
+                review_link = tag_a[i]
+                break
+        review_link.click()
+        
         driver.find_element(By.CSS_SELECTOR, '#_subtab_view > div > a:nth-child(2)').click()
         try:
             while True:
@@ -43,22 +56,26 @@ def get_blog_url(store_data):
                 time.sleep(0.4)
             
         except Exception as e:
-            print('finish')
+            print('finish click button')
 
         time.sleep(25)
-        blog_url_list = []
+        df_blog_url = pd.DataFrame(columns=['blog_url', 'date'])
         li_elements = driver.find_elements(By.CSS_SELECTOR, "li.xg2_q")
         for li in li_elements:
             a_element = li.find_element(By.TAG_NAME, 'a')
             href_value = a_element.get_attribute('href')
             date_element = li.find_element(By.CSS_SELECTOR, 'div.FYQ74 > span.ZeWU8')  # Adjusted selector
             date_value = date_element.text
-            blog_url_list.append((href_value, date_value))
+            new_row = pd.DataFrame({'blog_url': [href_value], 'date': [date_value]})
+            df_blog_url = pd.concat([df_blog_url, new_row], ignore_index=True)
             print(href_value, date_value)
             # print(span_value)
+        
+        df_blog_url['date'] = df_blog_url['date'].apply(trans_date)
+        df_blog_url['date'] = pd.to_datetime(df_blog_url['date'], format='%Y-%m-%d')
         driver.quit()
 
-        return blog_url_list
+        return df_blog_url
 
     except Exception as e:
         print(e)
