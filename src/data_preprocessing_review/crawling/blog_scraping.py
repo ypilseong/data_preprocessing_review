@@ -78,51 +78,31 @@ def extract_naverBlog(url, store_name):
         f.write(contents)                       
     
     # 이미지 추출
-    imgs = soup2.find_all('img', class_='se-image-resource egjs-visble')
-    # print(len(imgs))
-    # print(imgs)
-    cnt = 1
+    image_contents = soup2.find_all('div', {'class': re.compile('^se-component se-image')})
+    image_contents.append(soup2.find_all('div', {'class': re.compile('^se-component se-imageStrip')}))
 
-    for img in imgs:
-        img_url = img.get('data-lazy-src')
-        
-        if img_url:  # 이미지 주소가 비어있지 않을 경우에만 진행
-            try:
-                # 이미지 가져오기
+    cnt = 1
+    for img in image_contents:
+        try:
+            for img_tag in img.find_all('img'):
+                img_url = img_tag.get('data-lazy-src')
+                imageObj = Image.open(requests.get(img_url, stream=True).raw)
+                img_format = imageObj.format                    
                 res_img = requests.get(img_url).content
-                # 이미지 포맷 확인
-                imageObj = Image.open(BytesIO(res_img))
-                img_format = imageObj.format
+                
                 if img_format:
-                    img_name = str(cnt) + '.' + img_format.lower()  # 포맷을 소문자로 변경
+                    img_name = str(cnt) + '.' + img_format
                 else:
                     img_name = str(cnt) + '.jpg'
-                # 이미지 저장
-                with open(post_dir_name + '/' + img_name, 'wb') as f:
-                    f.write(res_img)
-                cnt += 1
-            except Exception as e:
-                print(f"Error fetching image: {e}")
-    # for img in imgs:
-    #     # <img src=  가 아닌  data-lazy-src=  부분을 가져와야 큰 이미지임
-    #     print(img.get('data-lazy-src'))  # img['data-lazy-src']
-    #     img_url = img.get('data-lazy-src')
-    #     ## pillow.Image로 이미지 format 알아내기
-    #     imageObj = Image.open(requests.get(img_url, stream=True).raw)
-    #     img_format = imageObj.format                    
-    #     res_img = requests.get(img_url).content
-        
-    #     if img_format:
-    #         img_name = str(cnt) + '.' + img_format
-    #     else:
-    #         img_name = str(cnt) + '.jpg'
-        
-    #     print(img_name)
+                
+                print(img_name)
 
-    #     if len(res_img) > 100:  # 이미지 용량이 00 bytes 이상인 것만
-    #         with open(post_dir_name + '/' + img_name, 'wb') as f:
-    #             f.write(res_img)
-    #         cnt += 1    
+                if len(res_img) > 100:  # 이미지 용량이 00 bytes 이상인 것만
+                    with open(post_dir_name + '/' + img_name, 'wb') as f:
+                        f.write(res_img)
+                    cnt += 1    
+        except:
+            continue
+    
     return post_dir_name
-
 

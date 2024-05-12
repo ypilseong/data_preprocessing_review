@@ -35,7 +35,7 @@ def main(path):
                             df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'True', 'word': 'None'}, ignore_index=True)
                     except:
                         blog_count += 1
-                        print(f'skip blog Number {blog_count}: {df_blog_url['blog_url'][k]}')
+                        print(f'skip blog Number {blog_count}')
                         continue
         except:
             print(f'Skip store Number {store_count}: {i}')
