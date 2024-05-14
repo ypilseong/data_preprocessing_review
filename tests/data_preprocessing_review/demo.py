@@ -9,9 +9,10 @@ from ocr import ocr
 import pandas as pd
 
 
-def main(path):
+def main(path, start):
 
     df = pd.read_csv(path, sep=',', encoding='utf-8')
+    df = df[start:]
     store_data = df['new_store_name'].tolist()
 
     df_blog = pd.DataFrame(columns=['store_name', 'blog_url', 'result', 'word'])
@@ -45,4 +46,5 @@ def main(path):
 
 
 if __name__ =='__main__':
-    main('/home/chuaie/workspace/projects/review_confirm/data/unique_store_data.csv')
+    start = int(180)
+    main('/home/chuaie/workspace/projects/review_confirm/data/unique_store_data.csv', start)

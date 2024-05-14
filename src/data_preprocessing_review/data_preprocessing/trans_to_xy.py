@@ -65,7 +65,7 @@ if __name__=='__main__':
                 continue  # 데이터를 찾을 수 없으면 다음 번호로 넘어감
         except Exception as e:
             print(f"An error occurred at index {i}: {e}")
-            break  # 오류가 발생하면 루프 중단
+            break
     
     print(f"Successfully processed {success_count} addresses.")
     

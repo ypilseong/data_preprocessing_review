@@ -44,3 +44,18 @@ Contributions are welcome! Please see the [contributing guidelines] for more inf
 ## License
 
 This project is released under the [MIT License][license-url].
+
+
+## blog crawling data structure
+
+    - Store data
+    
+    ```bash
+    ├── data
+    │   └── naverBlog
+    │       └── store name 
+                └── blog name
+                    ├── blog scraping.html
+                    ├── blog scraping.txt
+                    └── blog image.jpeg
+    ```
