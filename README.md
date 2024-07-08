@@ -51,9 +51,9 @@ This project is released under the [MIT License][license-url].
     - Store data
     
     ```bash
-    ├── data
-    │   └── naverBlog
-    │       └── store name 
+    ── data
+        └── naverBlog
+            └── store name 
                 └── blog name
                     ├── blog scraping.html
                     ├── blog scraping.txt
