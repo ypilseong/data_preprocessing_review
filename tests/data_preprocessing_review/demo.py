@@ -34,6 +34,7 @@ def main(path, start):
                             df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'False', 'word': false_review_word}, ignore_index=True)
                         else:
                             df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'True', 'word': 'None'}, ignore_index=True)
+                        df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
                     except:
                         blog_count += 1
                         print(f'skip blog Number {blog_count}')
@@ -42,9 +43,9 @@ def main(path, start):
             print(f'Skip store Number {store_count}: {i}')
             continue
 
-    df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
+    # df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
 
 
 if __name__ =='__main__':
-    start = int(180)
+    start = int(1174)
     main('/home/chuaie/workspace/projects/review_confirm/data/unique_store_data.csv', start)
