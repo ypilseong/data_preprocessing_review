@@ -33,7 +33,7 @@ def ocr(image_path):
 
 # 단어 확인 함수
 def check_word(text):
-    word_list = ['수수료', '원고료', '활동비', '물품', '소정의', '제작비', '참여후', '체험단']
+    word_list = ['수수료', '원고료', '활동비', '물품', '소정의', '제작비', '참여후', '체험단', '내돈내산']
     text = text.replace(" ", "")  # 공백 제거
     check_text = []
     condition = 'True'
@@ -41,8 +41,12 @@ def check_word(text):
     # 단어 포함 확인
     for word in word_list:
         if word in text:
-            check_text.append(word)
-            condition = 'False'
+            if word == '내돈내산':
+                check_text.append(word)
+                condition = 'True'
+            else:
+                check_text.append(word)
+                condition = 'False'
     
     return check_text, condition
 

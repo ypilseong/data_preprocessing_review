@@ -4,12 +4,12 @@ from bs4 import Comment
 from PIL import Image
 import re
 import os
-import json
-from lxml import etree
+from io import BytesIO
+
 
 def extract_naverBlog(url, store_name):
 
-    url = 'https://blog.naver.com/clare1/223273103611'
+    #url = 'https://blog.naver.com/clare1/223273103611'
 
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -104,52 +104,5 @@ def extract_naverBlog(url, store_name):
         except:
             continue
     
-    category_name = None
-    count = None
-    tag_count = 0
-    
-    html_str = str(soup2)
-    tree = etree.HTML(html_str)
-
-    category_name_elem = tree.xpath('//*[@id="category-name"]/div/table[2]/tbody/tr/td[2]/div/h4')
-    if category_name_elem:
-        category_name_soup = soup2.find(id="category-name").find("h4")
-        if category_name_soup:
-            category_name = category_name_soup.get_text(strip=True)
-            print(f'총 게시물 개수: {category_name}')
-    else:
-        category_name = None
-        print('총 게시물 개수 추출 안됨')
-    
-    # like_button = soup2.find('div', {'class': re.compile('u_likeit_list_module _reactionModule')})
-    count_soup = soup2.select_one('em.u_cnt._count')
-    if count_soup:
-        count = count_soup.get_text(strip=True)
-        print(f'Count: {count}')
-    else:
-        print('Count element found with XPath but not with BeautifulSoup')
-    
-    high_tag_elem = soup2.select_one('div.wrap_tag')
-    tag_elements = high_tag_elem.find_all('a', {'class': re.compile('item pcol2 itemTagfont _setTop')})
-    tag_count = len(tag_elements)
-    print(f'태그 총 개수: {tag_count}')
-
-    data = {
-    'url': url,
-    'title': post_title,
-    'category_name': category_name,
-    'count': count,
-    'tag_count': tag_count
-    }
-
-    json_filename = f'data/naverBlog/{store_name}/{dir_names}/metadata.json'
-    with open(json_filename, 'w', encoding='utf-8') as json_file:
-        json.dump(data, json_file, ensure_ascii=False, indent=4)
-
-    print(f'Data saved to {json_filename}')
-    
     return post_dir_name
 
-url = 'https://blog.naver.com/clare1/223273103611'
-store_name = '흑돈가'
-extract_naverBlog(url, store_name)

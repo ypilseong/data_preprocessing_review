@@ -16,25 +16,30 @@ def ocr(path):
             print(text)
             print(img_num)
             img_num += 1
-            check_text = check_word(text)
-
+            check_text, condition = check_word(text)
+            print(f'{path}: {check_text}, {condition}')
             return check_text
         except:
             break
 
 # 단어 확인 함수
 def check_word(text):
-    word_list = ['수수료', '원고료', '활동비', '물품', '소정의', '제작비', '참여후']
-    text = text.replace(" ", "") #공백 제거
+    word_list = ['수수료', '원고료', '활동비', '물품', '소정의', '제작비', '참여후', '체험단', '내돈내산']
+    text = text.replace(" ", "")  # 공백 제거
+    check_text = []
+    condition = 'True'
 
     # 단어 포함 확인
-    falase_review_word = []
     for word in word_list:
         if word in text:
-            print(word)
-            falase_review_word.append(text)
-
-    return falase_review_word
+            if word == '내돈내산':
+                check_text.append(word)
+                condition = 'True'
+            else:
+                check_text.append(word)
+                condition = 'False'
+    
+    return check_text, condition
 
 # tessdata 경로 설정
 #export TESSDATA_PREFIX='/home/chuaie/workspace/projects/review_confirm/tessdata'

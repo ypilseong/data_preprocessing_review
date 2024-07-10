@@ -20,6 +20,8 @@ def get_blog_url(store_data):
     # Webdriver headless mode setting
     options = webdriver.ChromeOptions()
     #options.add_argument('headless')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
     options.add_argument('window-size=1920x1080')
     options.add_argument("disable-gpu")
 
@@ -33,7 +35,7 @@ def get_blog_url(store_data):
 
 # Start crawling/scraping!
     try: 
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(options=options)
         res = driver.get(url)
         driver.implicitly_wait(30)
 

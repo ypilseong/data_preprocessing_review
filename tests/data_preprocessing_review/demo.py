@@ -1,8 +1,8 @@
 import sys
-sys.path.append('/home/chuaie/workspace/projects/review_confirm/src/data_preprocessing_review/crawling')
+sys.path.append('/home/chuaie/workspace/projects/data_preprocessing_review/src/data_preprocessing_review/crawling')
 from get_blog_url import get_blog_url
 from blog_scraping import extract_naverBlog
-from ocr import ocr
+from ocr_img import ocr
 
 
 
@@ -28,24 +28,24 @@ def main(path, start):
                     try:
                         blog_count += 1
                         post_dir_name = extract_naverBlog(df_blog_url['blog_url'][k], i)
-                        false_review_word = ocr(post_dir_name)
-                        if false_review_word is not None:
-                            
-                            df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'False', 'word': false_review_word}, ignore_index=True)
-                        else:
-                            df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'True', 'word': 'None'}, ignore_index=True)
-                        df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
+                        review_word = ocr(post_dir_name)
+                        if review_word is not None:
+                            if review_word == '내돈내산':
+                                df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'True', 'word': review_word}, ignore_index=True)
+                            else:
+                                df_blog = df_blog.append({'store_name': i, 'blog_url': k, 'result': 'False', 'word': review_word}, ignore_index=True)
+                        df_blog.to_csv('/home/chuaie/workspace/projects/data_preprocessing_review/data/blog_crawling_data.csv', index=False)
                     except:
                         blog_count += 1
                         print(f'skip blog Number {blog_count}')
                         continue
-        except:
-            print(f'Skip store Number {store_count}: {i}')
+        except Exception as e:
+            print(f'Skip store Number {store_count}: {i}: {e}')
             continue
 
     # df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
 
 
 if __name__ =='__main__':
-    start = int(1174)
-    main('/home/chuaie/workspace/projects/review_confirm/data/unique_store_data.csv', start)
+    start = int(0)
+    main('/home/chuaie/workspace/projects/data_preprocessing_review/data/filtered_data_with_date.csv', start)

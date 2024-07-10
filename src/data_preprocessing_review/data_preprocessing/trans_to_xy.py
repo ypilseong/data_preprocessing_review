@@ -80,4 +80,4 @@ if __name__=='__main__':
         df.at[i, 'y'] = y_value
 
 
-    df.to_csv('data/geopy_address6.csv', encoding='utf-8')
+    df.to_csv('data/geopy_address.csv', encoding='utf-8')

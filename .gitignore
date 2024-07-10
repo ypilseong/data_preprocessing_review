@@ -51,3 +51,6 @@ pytest-coverage.*
 data/
 tessdata/
 naverBlog/
+
+chromedriver
+*.deb
