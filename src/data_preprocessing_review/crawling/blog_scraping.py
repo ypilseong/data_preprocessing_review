@@ -124,7 +124,7 @@ def extract_naverBlog(url, store_name):
     return post_dir_name, post_title
 
 
-def extract_emotion_tag(url, driver,  post_dir_name, post_title):
+def extract_emotion_tag(url, driver,  post_dir_name, post_title, date):
     # Naver 블로그 URL 로드
     driver.get(url)
      
@@ -164,6 +164,7 @@ def extract_emotion_tag(url, driver,  post_dir_name, post_title):
         'url': url,
         'category_name': category_name,
         'post_title': post_title,
+        'date': date,
         'like': count,
         'tag_count': tag_count
     }
