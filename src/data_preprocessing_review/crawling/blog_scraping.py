@@ -1,3 +1,4 @@
+import time
 import requests
 from bs4 import BeautifulSoup
 from bs4 import Comment
@@ -6,10 +7,24 @@ import re
 import os
 import json
 from lxml import etree
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+
 
 def extract_naverBlog(url, store_name):
 
-    url = 'https://blog.naver.com/clare1/223273103611'
+    #url = 'https://m.blog.naver.com/clare1/223273103611'
+    session = requests.Session()
+    retries = Retry(total=5,
+                    backoff_factor=0.1,
+                    status_forcelist=[500, 502, 503, 504])
+
+    session.mount('http://', HTTPAdapter(max_retries=retries))
 
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -104,45 +119,56 @@ def extract_naverBlog(url, store_name):
         except:
             continue
     
-    category_name = None
-    count = None
-    tag_count = 0
     
-    html_str = str(soup2)
-    tree = etree.HTML(html_str)
+    
+    return post_dir_name
 
-    category_name_elem = tree.xpath('//*[@id="category-name"]/div/table[2]/tbody/tr/td[2]/div/h4')
-    if category_name_elem:
-        category_name_soup = soup2.find(id="category-name").find("h4")
-        if category_name_soup:
-            category_name = category_name_soup.get_text(strip=True)
-            print(f'총 게시물 개수: {category_name}')
-    else:
-        category_name = None
-        print('총 게시물 개수 추출 안됨')
+
+def extract_emotion_tag(url, driver,  post_dir_name, post_title):
+    # Naver 블로그 URL 로드
+    driver.get(url)
+     
+    # Wait until the main iframe is available and switch to it
+    WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'mainFrame')))
     
-    # like_button = soup2.find('div', {'class': re.compile('u_likeit_list_module _reactionModule')})
-    count_soup = soup2.select_one('em.u_cnt._count')
-    if count_soup:
-        count = count_soup.get_text(strip=True)
-        print(f'Count: {count}')
-    else:
-        print('Count element found with XPath but not with BeautifulSoup')
+    # 스크롤 다운
+    scroll_down(driver)
+
+    # Wait until the count element is present
+    count_elem = driver.find_element(By.CSS_SELECTOR, '#printPost1 > tbody > tr > td.bcc > div.post-btn.post_btn2 > div.wrap_postcomment > div.area_sympathy.pcol2 > a > div > span > em.u_cnt._count')
+    count = count_elem.text.strip()
+    print(f'Count: {count}')
     
-    high_tag_elem = soup2.select_one('div.wrap_tag')
-    tag_elements = high_tag_elem.find_all('a', {'class': re.compile('item pcol2 itemTagfont _setTop')})
+    # Wait until the tag element is present
+    high_tag_elem = driver.find_element(By.XPATH, '//*[@id="post_footer_contents"]/div/div[1]')
+    tag_elements = high_tag_elem.find_elements(By.TAG_NAME, 'a')
     tag_count = len(tag_elements)
     print(f'태그 총 개수: {tag_count}')
-
+    
+    
+    
+    
+    
+    
+    # 카테고리 이름 추출
+    category_name_elem = driver.find_elements(By.CSS_SELECTOR, '#category-name > div > table.post-body > tbody > tr > td.bcc > div > h4')
+    category_name = None
+    if category_name_elem:
+        category_name = category_name_elem[0].text.strip()
+        print(f'총 게시물 개수: {category_name}')
+    else:
+        print('총 게시물 개수 추출 안됨')
+    
+    # 데이터 저장
     data = {
-    'url': url,
-    'title': post_title,
-    'category_name': category_name,
-    'count': count,
-    'tag_count': tag_count
+        'url': url,
+        'category_name': category_name,
+        'post_title': post_title,
+        'like': count,
+        'tag_count': tag_count
     }
 
-    json_filename = f'data/naverBlog/{store_name}/{dir_names}/metadata.json'
+    json_filename = f'{post_dir_name}/metadata.json'
     with open(json_filename, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
@@ -150,6 +176,33 @@ def extract_naverBlog(url, store_name):
     
     return post_dir_name
 
-url = 'https://blog.naver.com/clare1/223273103611'
-store_name = '흑돈가'
-extract_naverBlog(url, store_name)
+
+def scroll_down(driver, scroll_pause_time=2):
+    """스크롤 다운 함수"""
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load the page
+        time.sleep(scroll_pause_time)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+if __name__=='__main__':
+    options = webdriver.ChromeOptions()
+    #options.add_argument('headless')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920x1080')
+    options.add_argument("disable-gpu")
+
+    driver = webdriver.Chrome(options=options)
+    url = 'https://blog.naver.com/ancandle/223440129193'
+    store_name = '흑돈가'
+    extract_emotion_tag(url=url,driver=driver, post_dir_name='data/naverBlog/흑돈가/기억에남는제주시흑돼지맛집', post_title= '흑돈가')

@@ -1,11 +1,13 @@
 from selenium.webdriver.common.by import By
-from urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+
 import time
 import requests
-from selenium.webdriver.support import expected_conditions as EC
+
 import pandas as pd
 
 def trans_date(x):
@@ -13,17 +15,17 @@ def trans_date(x):
     date = '20'+date[0]+ '-' + date[1] + '-' + date[2]
     return date
 
-def get_blog_url(store_data):
+def get_blog_url(driver, store_data):
 
     url = f'https://map.naver.com/v5/search/{store_data}'
     
     # Webdriver headless mode setting
-    options = webdriver.ChromeOptions()
-    #options.add_argument('headless')
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("disable-gpu")
+    # options = webdriver.ChromeOptions()
+    # #options.add_argument('headless')
+    # options.add_argument('--headless')
+    # options.add_argument('--no-sandbox')
+    # options.add_argument('window-size=1920x1080')
+    # options.add_argument("disable-gpu")
 
 # BS4 setting for secondary access
     session = requests.Session()
@@ -35,7 +37,7 @@ def get_blog_url(store_data):
 
 # Start crawling/scraping!
     try: 
-        driver = webdriver.Chrome(options=options)
+        #driver = webdriver.Chrome(options=options)
         res = driver.get(url)
         driver.implicitly_wait(30)
 
@@ -75,7 +77,8 @@ def get_blog_url(store_data):
         
         df_blog_url['date'] = df_blog_url['date'].apply(trans_date)
         df_blog_url['date'] = pd.to_datetime(df_blog_url['date'], format='%Y-%m-%d')
-        driver.quit()
+        #driver.quit()
+        
 
         return df_blog_url
 

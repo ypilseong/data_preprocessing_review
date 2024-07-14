@@ -3,7 +3,15 @@ sys.path.append('/home/chuaie/workspace/projects/data_preprocessing_review/src/d
 from get_blog_url import get_blog_url
 from blog_scraping import extract_naverBlog
 from ocr_img import ocr
-
+from selenium.webdriver.common.by import By
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+import requests
+from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
 
 
 import pandas as pd
@@ -15,13 +23,22 @@ def main(path, start):
     df = df[start:]
     store_data = df['new_store_name'].tolist()
 
+    options = webdriver.ChromeOptions()
+    #options.add_argument('headless')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('window-size=1920x1080')
+    options.add_argument("disable-gpu")
+
+    driver = webdriver.Chrome(options=options)
+
     df_blog = pd.DataFrame(columns=['store_name', 'blog_url', 'result', 'word'])
     blog_count = 0
     store_count = 0
     for i in store_data:
         store_count += 1
         try:
-            df_blog_url = get_blog_url(i)
+            df_blog_url = get_blog_url(driver,i)
             for k in range(len(df_blog_url)):
                 if ((df_blog_url['date'][k] > pd.to_datetime('2020-01-01', format='%Y-%m-%d')) and
                     (df_blog_url['date'][k] < pd.to_datetime('2021-12-31', format='%Y-%m-%d'))):
@@ -42,7 +59,7 @@ def main(path, start):
         except Exception as e:
             print(f'Skip store Number {store_count}: {i}: {e}')
             continue
-
+    driver.quit()
     # df_blog.to_csv('/home/chuaie/workspace/projects/review_confirm/data/blog_crawling_data.csv', index=False)
 
 
