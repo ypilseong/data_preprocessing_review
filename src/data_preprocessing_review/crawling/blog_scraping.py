@@ -121,7 +121,7 @@ def extract_naverBlog(url, store_name):
     
     
     
-    return post_dir_name
+    return post_dir_name, post_title
 
 
 def extract_emotion_tag(url, driver,  post_dir_name, post_title):

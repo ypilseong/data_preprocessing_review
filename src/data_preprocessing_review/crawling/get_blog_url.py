@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 
@@ -40,8 +41,8 @@ def get_blog_url(driver, store_data):
         #driver = webdriver.Chrome(options=options)
         res = driver.get(url)
         driver.implicitly_wait(30)
-
-        driver.switch_to.frame("entryIframe")
+        WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "entryIframe")))
+        # driver.switch_to.frame("entryIframe")
         # Pagedown
         driver.find_element(By.CSS_SELECTOR, 'body').send_keys(Keys.PAGE_DOWN)
         # driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div/div/div[4]/div/div/div/div/a[4]').click()

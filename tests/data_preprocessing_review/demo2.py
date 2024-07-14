@@ -1,7 +1,7 @@
 import sys
 sys.path.append('/home/chuaie/workspace/projects/data_preprocessing_review/src/data_preprocessing_review/crawling')
 from get_blog_url import get_blog_url
-from blog_scraping import extract_naverBlog
+from blog_scraping import extract_naverBlog, extract_emotion_tag
 from ocr_img import ocr
 from selenium.webdriver.common.by import By
 from urllib3.util.retry import Retry
@@ -44,7 +44,8 @@ def main(path, start):
                     (df_blog_url['date'][k] < pd.to_datetime('2021-12-31', format='%Y-%m-%d'))):
                     try:
                         blog_count += 1
-                        post_dir_name = extract_naverBlog(df_blog_url['blog_url'][k], i)
+                        post_dir_name, post_title = extract_naverBlog(df_blog_url['blog_url'][k], i)
+                        extract_emotion_tag(url=df_blog_url['blog_url'][k],driver=driver, post_dir_name=post_dir_name, post_title=post_title)
                         review_word = ocr(post_dir_name)
                         if review_word is not None:
                             if review_word == '내돈내산':
