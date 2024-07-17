@@ -45,7 +45,7 @@ def main(path, start):
                     try:
                         blog_count += 1
                         post_dir_name, post_title = extract_naverBlog(df_blog_url['blog_url'][k], i)
-                        extract_emotion_tag(url=df_blog_url['blog_url'][k],driver=driver, post_dir_name=post_dir_name, post_title=post_title, date=df_blog_url['date'][k])
+                        extract_emotion_tag(url=df_blog_url['blog_url'][k],driver=driver, post_dir_name=post_dir_name, post_title=post_title, date=df_blog_url['date'][k], week=df_blog_url['day_of_week'][k])
                         review_word = ocr(post_dir_name)
                         if review_word is not None:
                             if review_word == '내돈내산':
@@ -66,4 +66,4 @@ def main(path, start):
 
 if __name__ =='__main__':
     start = int(0)
-    main('/home/chuaie/workspace/projects/data_preprocessing_review/data/filtered_data_with_date.csv', start)
+    main('/home/chuaie/workspace/projects/data_preprocessing_review/data/filtered_data_with_date_xy.csv', start)

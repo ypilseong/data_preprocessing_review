@@ -124,7 +124,7 @@ def extract_naverBlog(url, store_name):
     return post_dir_name, post_title
 
 
-def extract_emotion_tag(url, driver,  post_dir_name, post_title, date):
+def extract_emotion_tag(url, driver,  post_dir_name, post_title, date, week):
     # Naver 블로그 URL 로드
     driver.get(url)
      
@@ -164,7 +164,8 @@ def extract_emotion_tag(url, driver,  post_dir_name, post_title, date):
         'url': url,
         'category_name': category_name,
         'post_title': post_title,
-        'date': date,
+        'date': str(date),
+        'week': week,
         'like': count,
         'tag_count': tag_count
     }
@@ -206,4 +207,4 @@ if __name__=='__main__':
     driver = webdriver.Chrome(options=options)
     url = 'https://blog.naver.com/ancandle/223440129193'
     store_name = '흑돈가'
-    extract_emotion_tag(url=url,driver=driver, post_dir_name='data/naverBlog/흑돈가/기억에남는제주시흑돼지맛집', post_title= '흑돈가')
+    extract_emotion_tag(url=url,driver=driver, post_dir_name='data/naverBlog/흑돈가/기억에남는제주시흑돼지맛집', post_title= '흑돈가', date=20220)
