@@ -65,5 +65,5 @@ def main(path, start):
 
 
 if __name__ =='__main__':
-    start = int(0)
+    start = int(2035)
     main('/home/chuaie/workspace/projects/data_preprocessing_review/data/filtered_data_with_date_xy.csv', start)

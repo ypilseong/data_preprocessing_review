@@ -44,7 +44,7 @@ def get_blog_url(driver, store_data):
         # driver = webdriver.Chrome(options=options)
         res = driver.get(url)
         driver.implicitly_wait(30)
-        WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "entryIframe")))
+        WebDriverWait(driver, 40).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "entryIframe")))
         # driver.switch_to.frame("entryIframe")
         # Pagedown
         driver.find_element(By.CSS_SELECTOR, 'body').send_keys(Keys.PAGE_DOWN)
