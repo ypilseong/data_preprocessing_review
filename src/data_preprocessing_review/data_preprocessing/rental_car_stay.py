@@ -17,7 +17,7 @@ def get_rectangle_coordinates(center_lat, center_lon, width_meters, height_meter
     }
 
 # 파일 읽기
-df_store = pd.read_csv('/Users/gyubeomlee/Desktop/Workspace/data_preprocessing_review/data/filtered_data_with_date_xy.csv')
+df_store = pd.read_csv('/Users/gyubeomlee/Desktop/Workspace/data_preprocessing_review/data/testdata.csv')
 df_rental = pd.read_csv('/Users/gyubeomlee/Desktop/Workspace/data_preprocessing_review/data/rental_car_data_pretrain.csv')
 
 # 결과 저장할 리스트 초기화
